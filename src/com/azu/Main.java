@@ -1,7 +1,8 @@
 package com.azu;
 
-import com.azu.Controls.OscillatorFreqMouseController;
+import com.azu.Controls.SquareMouseController;
 import com.azu.Controls.GateControlledWithKey;
+import com.azu.Controls.SmoothControlsConverter;
 import ru.ege.engine.EGEngine;
 
 import javax.sound.sampled.*;
@@ -58,14 +59,21 @@ public class Main {
             x.close();
         });
         Combinator combinator = new Combinator(list);
-        Player.soundSource = combinator;
+        Delay delay = new Delay(combinator, 1d);
+        Player.soundSource = new Combinator(delay,combinator);
     }
 
     public static void testMouse(){
         Note note = Note.getNoteByName("A4");
         Oscillator source = new Oscillator(Oscillator.sine, note.freq);
-        EGEngine.i().addDrawableObject(new OscillatorFreqMouseController(source));
-        Player.soundSource = source;
+        Oscillator source2 = new Oscillator(Oscillator.sine, note.freq);
+        SquareMouseController controller = new SquareMouseController(source,Note.getNoteByName("C2").freq, Note.getNoteByName("C4").freq, source2,Note.getNoteByName("C2").freq, Note.getNoteByName("C4").freq);
+        controller.left = (controller.sizeX - controller.sizeY )/2;
+        controller.sizeX = controller.sizeY;
+        EGEngine.i().addDrawableObject(controller);
+        Combinator sum = new Combinator(source, source2);
+
+        Player.soundSource = sum;
     }
 
 }

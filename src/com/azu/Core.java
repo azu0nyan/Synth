@@ -8,8 +8,8 @@ import javax.sound.sampled.SourceDataLine;
 public class Core {
 
     public static final int SAMPLE_RATE = 16 * 1024;
-    public static final int SAMPLE_SIZE_IN_BITS = 8;
-    public static double sampleNumber = 0;
+    public static final int SAMPLE_SIZE_IN_BITS = 16;
+    public static int  sampleNumber = 0;
     static double getFrameLength(){
         return 1 / (double) Core.SAMPLE_RATE;
     }
@@ -24,7 +24,11 @@ public class Core {
     }
 
 
-    public static void playWithMinimalDelay(){
 
+    public static int getFramesInTime(double time) {
+        return (int) (time / getFrameLength());
+    }
+    public static int getSampleNumber(){
+        return  sampleNumber;
     }
 }

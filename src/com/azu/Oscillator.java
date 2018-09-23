@@ -1,10 +1,12 @@
 package com.azu;
 
+import com.azu.Controls.ControllableValue;
+
 import java.util.function.Function;
 
 import static com.azu.Core.*;
 
-public class Oscillator implements SoundSource {
+public class Oscillator implements SoundSource, ControllableValue {
 
     public static Function<Double, Double> square = x -> Math.signum((x - Math.floor(x)) * 2 - 1);
     public static Function<Double, Double> saw = x -> ((x - Math.floor(x)) * 2 - 1) /2;// /2 - normalized
@@ -43,5 +45,10 @@ public class Oscillator implements SoundSource {
         timeDelta = ((getTime() +  timeDelta) * freq  - getTime() *newFreq)/ newFreq ;
        // System.out.println(timeDelta);
         freq = newFreq;
+    }
+
+    @Override
+    public void set(double value) {
+        setFreq(value);
     }
 }

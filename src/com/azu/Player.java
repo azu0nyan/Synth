@@ -5,6 +5,8 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
+import java.nio.ByteBuffer;
+
 import static com.azu.Core.*;
 
 public class Player {
@@ -23,8 +25,14 @@ public class Player {
             while (!stop) {
                 Core.sampleNumber++;
                 double value = soundSource.getSoundSample();
-                byte valueB = (byte) value;
-                line.write(new byte[]{valueB}, 0, 1);
+                if (Core.SAMPLE_SIZE_IN_BITS == 8) {
+                    byte valueB = (byte) value;
+                    line.write(new byte[]{valueB}, 0, 1);
+                }
+                if(Core.SAMPLE_SIZE_IN_BITS == 16) {
+                    int toWrite = (int) value;
+                    line.write(new byte[]{(byte) ((toWrite & 0x0000FF00) >> 8), (byte) ((toWrite & 0x000000FF) >> 0)}, 0, 2);
+                }
             }
 
 
