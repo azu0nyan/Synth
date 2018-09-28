@@ -6,7 +6,7 @@ public class VolumeControl implements SoundSource, ControllableValue {
     SoundSource source;
     double volumeLevel = 1;
     boolean clamp = true;
-    boolean tanh = false;
+    boolean tanh = true;
     public VolumeControl(SoundSource source) {
         this.source = source;
     }

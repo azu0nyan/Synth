@@ -59,8 +59,9 @@ public class Main {
             x.close();
         });
         Combinator combinator = new Combinator(list);
-        Delay delay = new Delay(combinator, 1d);
-        Player.soundSource = new Combinator(delay,combinator);
+        /*Delay delay = new Delay(combinator, 1d);
+        Player.soundSource = new Combinator(delay,combinator);*/
+       Player.soundSource = combinator;
     }
 
     public static void testMouse(){
@@ -78,16 +79,22 @@ public class Main {
     public static void testMouse2(){
         Note note = Note.getNoteByName("A4");
         Oscillator source = new Oscillator(Oscillator.sine, note.freq);
-        VolumeControl source2 = new VolumeControl(source);
-        SquareMouseController controller = new SquareMouseController(source,Note.getNoteByName("C2").freq, Note.getNoteByName("C5").freq, source2,0, 4);
+        //SimpleLowPassFilter filter =  new SimpleLowPassFilter(source2);
+        //  Player.soundSource = volume;
+        /*Delay delay = new Delay(volume, 0.5d);
+        Delay delay2 = new Delay(delay, 0.5d);
+        Delay delay3 = new Delay(delay2, 0.5d);
+        Delay delay4 = new Delay(delay3, 0.5d);*/
+        // Combinator sum = new Combinator(delay, delay2,delay3, delay4, volume);
+        BesselFilter besselFilter = new BesselFilter(source);
+        VolumeControl volume = new VolumeControl(besselFilter);
+        EGEngine.i().addKeyListener(new KeyToggler(besselFilter, KeyEvent.VK_SPACE));
+        Player.soundSource = volume;
+        //SquareMouseController controller = new SquareMouseController(source,Note.getNoteByName("C2").freq, Note.getNoteByName("C5").freq, volume,0, 4);
+        SquareMouseController controller = new SquareMouseController(source,Note.getNoteByName("C2").freq, Note.getNoteByName("C5").freq, besselFilter,Note.getNoteByName("C2").freq, Note.getNoteByName("C5").freq);
         controller.left = (controller.sizeX - controller.sizeY )/2;
         controller.sizeX = controller.sizeY;
         EGEngine.i().addDrawableObject(controller);
-        //Combinator sum = new Combinator(source, source2);
-        SimpleLowPassFilter filter =  new SimpleLowPassFilter(source);
-        EGEngine.i().addKeyListener(new KeyToggler(filter, KeyEvent.VK_SPACE));
-        Player.soundSource = filter;
-      //  Player.soundSource = source2;
     }
 
 }

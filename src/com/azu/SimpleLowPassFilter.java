@@ -23,13 +23,6 @@ public class SimpleLowPassFilter implements SoundSource, Toggleable {
     public double getSoundSample() {
         if (source == null) return 0;
         if (on) {
-           /* buffer.updateBuffer();
-            double sum = 0;
-            for(double d : buffer.getBuffer()){
-                sum +=d;
-            }
-                return sum / buffer.getSize() ;*/
-           //y[i] := y[i-1] + α * (x[i] - y[i-1])
             double newValue = prevValue + a * (source.getSoundSample() - prevValue);
             prevValue = newValue;
             return newValue;
