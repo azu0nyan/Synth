@@ -40,11 +40,12 @@ public class SquareMouseController implements DrawableObject {
     }
 
     Point mouse;
-
+    double valueSetX = minX;
+    double valueSetY = minY;
     @Override
     public void drawAndUpdate(Graphics2D graphics2D, double v) {
         mouse = EGEngine.i().getMousePosition();
-        draw(graphics2D);
+
         if (mouse != null) {
             //in area
             if (inArea()) {
@@ -60,15 +61,19 @@ public class SquareMouseController implements DrawableObject {
                 double deltaY = maxY - minY;
                 double valueY = minY;
                 valueY += deltaY * yFraction;
+
                 if (controllableValueX != null) {
                     controllableValueX.set(valueX);
+                    valueSetX = valueX;
                 }
                 if (controllableValueY != null) {
                     controllableValueY.set(valueY);
+                    valueSetY = valueY;
                 }
 
             }
         }
+        draw(graphics2D);
     }
 
     boolean inArea() {
@@ -79,23 +84,30 @@ public class SquareMouseController implements DrawableObject {
     Color rect = new Color(34, 189, 35);
     Color background = new Color(0, 0, 0);
     Color lineColor = new Color(212, 35, 46);
+    boolean printValues = true;
+    int fontSize = 16;
+    Color textColor = new Color(84, 102, 226);
 
-    private void draw(Graphics2D graphics2D) {
-        graphics2D.setColor(background);
-        graphics2D.fillRect(left, top, sizeX, sizeY);
-        graphics2D.setColor(lineColor);
-        graphics2D.setStroke(new BasicStroke(strokeSize));
+    private void draw(Graphics2D g) {
+        g.setColor(background);
+        g.fillRect(left, top, sizeX, sizeY);
+        g.setColor(lineColor);
+        g.setStroke(new BasicStroke(strokeSize));
         if (mouse != null && inArea() && controllableValueX != null) {
             int x = mouse.x;
-            graphics2D.drawLine(x, top,x,top + sizeY);
+            g.drawLine(x, top,x,top + sizeY);
         }
         if (mouse != null && inArea() && controllableValueY != null) {
             int y = mouse.y;
-            graphics2D.drawLine(left, y,left + sizeX, y);
+            g.drawLine(left, y,left + sizeX, y);
         }
 
-        graphics2D.setColor(rect);
-        graphics2D.drawRect(left, top, sizeX, sizeY);
-
+        g.setColor(rect);
+        g.drawRect(left, top, sizeX, sizeY);
+        if(mouse != null && inArea() && printValues){
+            g.setColor(textColor);
+            g.setFont(new Font("", Font.BOLD, fontSize));
+            g.drawString(String.format("%.3f %.3f", valueSetX,valueSetY), mouse.x, mouse.y);
+        }
     }
 }

@@ -8,7 +8,7 @@ import javax.sound.sampled.SourceDataLine;
 public class Core {
 
     public static final int SAMPLE_RATE = 16 * 1024;
-    public static final int SAMPLE_SIZE_IN_BITS = 16;
+    public static final int SAMPLE_SIZE_IN_BITS = 16;//only 8 & 16
     public static int  sampleNumber = 0;
     static double getFrameLength(){
         return 1 / (double) Core.SAMPLE_RATE;

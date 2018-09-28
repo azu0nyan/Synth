@@ -2,7 +2,7 @@ package com.azu;
 
 import com.azu.Controls.SquareMouseController;
 import com.azu.Controls.GateControlledWithKey;
-import com.azu.Controls.SmoothControlsConverter;
+import com.azu.Controls.KeyToggler;
 import ru.ege.engine.EGEngine;
 
 import javax.sound.sampled.*;
@@ -22,7 +22,7 @@ public class Main {
         EGEngine.instance().startDrawingThread();
 
 
-        initTestCombinator();
+        testMouse2();
         Player.play();
 
     }
@@ -74,6 +74,20 @@ public class Main {
         Combinator sum = new Combinator(source, source2);
 
         Player.soundSource = sum;
+    }
+    public static void testMouse2(){
+        Note note = Note.getNoteByName("A4");
+        Oscillator source = new Oscillator(Oscillator.sine, note.freq);
+        VolumeControl source2 = new VolumeControl(source);
+        SquareMouseController controller = new SquareMouseController(source,Note.getNoteByName("C2").freq, Note.getNoteByName("C5").freq, source2,0, 4);
+        controller.left = (controller.sizeX - controller.sizeY )/2;
+        controller.sizeX = controller.sizeY;
+        EGEngine.i().addDrawableObject(controller);
+        //Combinator sum = new Combinator(source, source2);
+        SimpleLowPassFilter filter =  new SimpleLowPassFilter(source);
+        EGEngine.i().addKeyListener(new KeyToggler(filter, KeyEvent.VK_SPACE));
+        Player.soundSource = filter;
+      //  Player.soundSource = source2;
     }
 
 }
