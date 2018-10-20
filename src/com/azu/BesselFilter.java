@@ -6,7 +6,7 @@ import com.azu.Controls.Toggleable;
 import java.awt.event.MouseAdapter;
 
 public class BesselFilter implements SoundSource, Toggleable, ControllableValue {
-    int bufferSize = 100;
+    int bufferSize = Core.SAMPLE_RATE / 220;
     CyclicBuffer buffer;
     SoundSource source;
 
@@ -80,6 +80,6 @@ public class BesselFilter implements SoundSource, Toggleable, ControllableValue 
 
     @Override
     public void set(double value) {
-        removeFreq = value;
+       // removeFreq = value;
     }
 }

@@ -1,5 +1,6 @@
 package com.azu;
 
+import com.azu.Controls.ControlsSplitter;
 import com.azu.Controls.SquareMouseController;
 import com.azu.Controls.GateControlledWithKey;
 import com.azu.Controls.KeyToggler;
@@ -67,7 +68,7 @@ public class Main {
     public static void testMouse(){
         Note note = Note.getNoteByName("A4");
         Oscillator source = new Oscillator(Oscillator.sine, note.freq);
-        Oscillator source2 = new Oscillator(Oscillator.sine, note.freq);
+        Oscillator source2 = new Oscillator(Oscillator.square, note.freq);
         SquareMouseController controller = new SquareMouseController(source,Note.getNoteByName("C2").freq, Note.getNoteByName("C4").freq, source2,Note.getNoteByName("C2").freq, Note.getNoteByName("C4").freq);
         controller.left = (controller.sizeX - controller.sizeY )/2;
         controller.sizeX = controller.sizeY;
@@ -78,20 +79,18 @@ public class Main {
     }
     public static void testMouse2(){
         Note note = Note.getNoteByName("A4");
-        Oscillator source = new Oscillator(Oscillator.sine, note.freq);
-        //SimpleLowPassFilter filter =  new SimpleLowPassFilter(source2);
-        //  Player.soundSource = volume;
-        /*Delay delay = new Delay(volume, 0.5d);
-        Delay delay2 = new Delay(delay, 0.5d);
-        Delay delay3 = new Delay(delay2, 0.5d);
-        Delay delay4 = new Delay(delay3, 0.5d);*/
-        // Combinator sum = new Combinator(delay, delay2,delay3, delay4, volume);
-        BesselFilter besselFilter = new BesselFilter(source);
-        VolumeControl volume = new VolumeControl(besselFilter);
-        EGEngine.i().addKeyListener(new KeyToggler(besselFilter, KeyEvent.VK_SPACE));
-        Player.soundSource = volume;
+        Oscillator source1 = new Oscillator(Oscillator.saw, note.freq);
+        Oscillator source2 = new Oscillator(Oscillator.sine, note.freq);
+        SimpleMorpher morpher = new SimpleMorpher(source1, source2);
+        ExponentAmplifier amplifier = new ExponentAmplifier(morpher);
+        VolumeControl volume = new VolumeControl(amplifier);
+        volume.tanh = true;
+        //EGEngine.i().addKeyListener(new KeyToggler(besselFilter, KeyEvent.VK_SPACE));
+
+        Player.soundSource = amplifier;
         //SquareMouseController controller = new SquareMouseController(source,Note.getNoteByName("C2").freq, Note.getNoteByName("C5").freq, volume,0, 4);
-        SquareMouseController controller = new SquareMouseController(source,Note.getNoteByName("C2").freq, Note.getNoteByName("C5").freq, besselFilter,Note.getNoteByName("C2").freq, Note.getNoteByName("C5").freq);
+        SquareMouseController controller = new SquareMouseController(morpher, 0, 1,  amplifier, 0, 4);
+        //SquareMouseController controller = new SquareMouseController(morpher, 0, 1, new ControlsSplitter(source1, source2), Note.getNoteByName("C2").freq, Note.getNoteByName("C5").freq);
         controller.left = (controller.sizeX - controller.sizeY )/2;
         controller.sizeX = controller.sizeY;
         EGEngine.i().addDrawableObject(controller);
