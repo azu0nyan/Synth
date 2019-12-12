@@ -10,9 +10,14 @@ public class CyclicBuffer {
         buffer = new double[size];
     }
 
-    public void updateBuffer(){
+    public void updateBuffer(double val){
+        buffer[Core.getSampleNumber() % size] = val;
+    }
+
+    public void updateBufferFromSource(){
         if(source == null)return;
-        buffer[Core.getSampleNumber() % size] = source.getSoundSample();
+        updateBuffer(source.getSoundSample());
+
     }
 
     public  double getFromBuffer(int offset){

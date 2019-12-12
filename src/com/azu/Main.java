@@ -23,7 +23,7 @@ public class Main {
         EGEngine.instance().startDrawingThread();
 
 
-        testMouse2();
+        initTestCombinator();
         Player.play();
 
     }
@@ -60,9 +60,11 @@ public class Main {
             x.close();
         });
         Combinator combinator = new Combinator(list);
+        Filter f = new Filter(combinator, Note.getNoteByName("G3").freq, 0.1, 0.1);
         /*Delay delay = new Delay(combinator, 1d);
         Player.soundSource = new Combinator(delay,combinator);*/
        Player.soundSource = combinator;
+//       Player.soundSource = f;
     }
 
     public static void testMouse(){
